@@ -1,0 +1,24 @@
+html, body {
+	height: 100%;
+}
+
+body {
+	font-family: Verdana;
+	margin: 0;
+	box-sizing: border-box;
+	background: #1A1A1A;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.canvas-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+footer {
+	color: white;
+}
