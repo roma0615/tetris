@@ -173,11 +173,9 @@ function Piece(name, pieceShape, pieceColor) {
 		if (this.name == "i") dictNum = 1;
 		var mappingString = oldRotateStage + "->" + this.rotateStage;
 		for (var test = 0; test < 5; test++) {
-			// keep track of whether this test will work
 			var fail = false;
 
 			// test if translation by x and y results in valid position
-			// to access x and y, its gonna be
 			// rotation[dictNum][mappingString][test][x:0, y:1]
 			var shiftX = rotation[dictNum][mappingString][test][0];
 			var shiftY = rotation[dictNum][mappingString][test][1];
@@ -208,7 +206,7 @@ function Piece(name, pieceShape, pieceColor) {
 				break;
 			}
 		}
-		if (moveX !== -100) { // we found a valid rotation (most likely yeah)
+		if (moveX !== -100) { // found a valid rotation
 			board.fallingX += moveX;
 			board.fallingY += moveY;
 			this.shape = newShape;
@@ -217,80 +215,8 @@ function Piece(name, pieceShape, pieceColor) {
 			// {dont}
 			return false;
 		}
-
-		/*
-		// check if any parts are off the board
-		// If so, determine the farthest out and move in by that amount
-		var moveX = -100;
-		var moveY = -100;
-		var lowestSum = 100;
-		var stayingWorks = false;
-		var vals = [2, -2, 1, -1, 0]; // 0 is last cuz staying still is preferable
-		for (var dxi = 0; dxi < vals.length; dxi++) {
-			for (var dyi = 0; dyi < vals.length; dyi++) {
-				var fail = false;
-				for (var i = 0; i < newShape.length; i++) {
-					for (var j = 0; j < newShape[i].length; j++) {
-						var x = board.fallingX + j + vals[dxi],
-							y = board.fallingY + i + vals[dyi];
-
-						if (newShape[i].charAt(j) !== "X") continue;
-						// if out of bounds, fail
-						if (y < 0 || y >= board.grid.length || x < 0 || x >= board.grid[0].length) {
-							fail = true;
-							break;
-						}
-						if (board.grid[y][x] !== 0) {
-							// theres a block there! Fail!
-							fail = true;
-							break;
-						}
-					} // end j
-					if (fail) break;
-				} // end i
-				if (!fail) { // if this a valid spot to end up in
-					// if we're here, this rotation works
-					// if (vals[dxi] == 0 && vals[dyi] == 0) stayingWorks = true;
-					if (Math.abs(vals[dxi]) + Math.abs(vals[dyi]) < lowestSum) {
-						moveX = vals[dxi];
-						moveY = vals[dyi];
-						// console.log("X: " + moveX + " | Y: " + moveY);
-						lowestSum = Math.abs(vals[dxi]) + Math.abs(vals[dyi]);
-					} else if (Math.abs(vals[dxi]) + Math.abs(vals[dyi]) == lowestSum) {
-						if (vals[dyi] > moveY) { // if lower (lower == better!)
-							moveX = vals[dxi];
-							moveY = vals[dyi];
-							// console.log("X: " + moveX + " | Y: " + moveY);
-							lowestSum = Math.abs(vals[dxi]) + Math.abs(vals[dyi]);
-						}
-					}
-					/*
-					if (vals[dyi] > moveY) {
-						moveX = vals[dxi];
-						moveY = vals[dyi];
-						console.log("X: " + moveX + " | Y: " + moveY);
-						lowestSum = Math.abs(vals[dxi]) + Math.abs(vals[dyi]);
-					}
-					* /
-				}
-			} // end dyi
-		} // end dxi
-
-		if (moveX !== -100) { // we found a valid rotation!
-			if (!stayingWorks) {
-				board.fallingX += moveX;
-				board.fallingY += moveY;
-			}
-			this.shape = newShape;
-			return true;
-		} else {
-			return false;
-		}
-		*/
-
 	};
 	this.addToGrid = function(board) {	
-		// convert each part to a block and put it in the grid spot
 		for (var i = 0; i < this.shape.length; i++) {
 			for (var j = 0; j < this.shape[i].length; j++) {
 				if (this.shape[i][j] !== 'X') continue;
@@ -300,12 +226,9 @@ function Piece(name, pieceShape, pieceColor) {
 		}
 	};
 	this.touchingBottom = function(board) {
-		// for each block in piece, if pos + dx and dy is on the grid, return true
-		// else false
 		for (var i = 0; i < this.shape.length; i++) {
 			for (var j = 0; j < this.shape[i].length; j++) {
 				if (this.shape[i][j] !== 'X') continue;
-				// j is x, i is y
 				// the pos of current block is: (board.fallingX + j, board.fallingY + i)
 				if (board.fallingY+i+1 == 20) return true;
 				if (board.grid[board.fallingY+i+1][board.fallingX+j] !== 0) {
@@ -322,13 +245,9 @@ function Piece(name, pieceShape, pieceColor) {
 		return false;
 	};
 	this.touchingSide = function(board, dx) {
-		// for each block in piece, if pos + dx and dy is on the grid, return true
-		// else false
 		for (var i = 0; i < this.shape.length; i++) {
 			for (var j = 0; j < this.shape[i].length; j++) {
 				if (this.shape[i][j] !== 'X') continue;
-				// j is x, i is y
-				// the pos of current block is: (board.fallingX + j, board.fallingY + i)
 				if (board.fallingX+j+dx < 0 || board.fallingX+j+dx >= board.grid[0].length) return true;
 				if (board.grid[board.fallingY+i][board.fallingX+j+dx] !== 0) return true;
 			}
@@ -350,7 +269,7 @@ function Ghost(shape, x, y) {
 	this.shape = shape;
 	this.x = x;
 	this.y = y;
-	this.color = "#7774"; // transparent
+	this.color = "#7774"; // translucent
 	this.draw = function() {
 		for (var i = 0; i < this.shape.length; i++) {
 			for (var j = 0; j < this.shape[i].length; j++) {
@@ -373,7 +292,7 @@ function Block(color) {
 
 function randomPiece() {
 	var prop = pickRandomProperty(pieces);
-	return new Piece(prop, pieces[prop].shape, pieces[prop].color); // random piece
+	return getPiece(prop);
 }
 function getPiece(name) {
 	return new Piece(name, pieces[name].shape, pieces[name].color); // random piece
@@ -449,43 +368,27 @@ board = {
 					break;
 				}
 			}
-			if (full) {
-				fullRows.push(i);
-			}
+			if (full) fullRows.push(i);
 		}
 		if (fullRows.length == 0) return;
-		
-		// 0, 1, 2, 3, 4, 5, 6, 7, 8
-		//          3,       6
-		// 0, 1, 2, 4, 5, 6, 8
 		for (var i = 0; i < fullRows.length; i++) {
 			var row = fullRows[i];
-			
 			for (var j = 0; j < this.grid[row].length; j++) {
 				this.grid[row][j] = 0;
 			}
-			
 		}
 		// now we have gaps, shift them down
 		var shiftAmount = 0;
 		for (var i = this.grid.length-1; i >= 0; i--) {
 			if (fullRows.includes(i)) {
 				shiftAmount++;
-			} else { // theres a row to shift
+			} else {
 				if (shiftAmount == 0) continue;
 				for (var j = 0; j < this.grid[i].length; j++) {
 					this.grid[i+shiftAmount][j] = this.grid[i][j];
 					this.grid[i][j] = 0;
 				}
 			}
-			//             //////////
-			
-			
-			/////////            ////
-			//// /////// /  /////////
-			///////////////////     /
-			///////////     /////////
-			///    //////////////////
 		}
 		// make it faster!
 		game.speed -= 2;
@@ -499,7 +402,7 @@ board = {
 			}
 		}
 	},
-	clearButGray: function() {
+	clearAllButGray: function() {
 		for (var i = 0; i < this.grid.length; i++) {
 			for (var j = 0; j < this.grid[i].length; j++) {
 				if (this.grid[i][j] === 0) continue;
@@ -513,7 +416,6 @@ function resizeCanvas() {
 	var d = Math.min(document.body.clientWidth/5*4, document.body.clientHeight/5*4);
 	canvas.width = d;
 	canvas.height = d;
-
 	board.width = d/2;
 	board.height = d;
 }
@@ -534,7 +436,6 @@ window.onkeydown = function(e) {
 			}
 		} else {
 			if (!game.gameOver) {
-				// rotate the falling piece
 				if (e.keyCode == 38) { // up
 					board.fallingPiece.rotate(board, "right");
 				} else if (e.keyCode == 16) { // shift
@@ -689,7 +590,6 @@ function setVolume(id, vol) {
 }
 
 // BEGIN THE GAME //
-
 setInterval(updateGame, 20);
 setVolume("theme", 0.1);
 resizeCanvas();
