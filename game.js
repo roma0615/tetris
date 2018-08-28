@@ -391,7 +391,7 @@ board = {
 			}
 		}
 		// make it faster!
-		game.speed -= 2;
+		game.speed -= game.speed * 0.03 << 0;
 	},
 	initWithGrid: function(arr) {
 		for (var i = 0; i < arr.length; i++) {
@@ -487,7 +487,7 @@ window.onkeydown = function(e) {
 };
 
 game = {
-	speed: 60,
+	speed: 240,
 	gameOver: false,
 	firstTimeBeforeStart: true,
 	swapped: false,
@@ -502,7 +502,7 @@ game = {
 		return next;
 	},
 	reset: function() {
-		this.speed = 60;
+		this.speed = 240;
 		this.gameOver = false;
 		this.hold = 0;
 		this.queue = [randomPiece(), randomPiece()];
@@ -590,6 +590,6 @@ function setVolume(id, vol) {
 }
 
 // BEGIN THE GAME //
-setInterval(updateGame, 20);
+setInterval(updateGame, 5);
 setVolume("theme", 0.1);
 resizeCanvas();
