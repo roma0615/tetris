@@ -505,7 +505,7 @@ game = {
 		this.speed = 240;
 		this.gameOver = false;
 		this.hold = 0;
-		this.queue = [randomPiece(), randomPiece()];
+		this.queue = [randomPiece(), randomPiece(), randomPiece()];
 		this.swapped = false;
 	}
 }
